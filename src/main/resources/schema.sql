@@ -45,12 +45,13 @@ CREATE TABLE user_role
     FOREIGN KEY (role_id) REFERENCES roles (id) ON DELETE CASCADE
 );
 
-CREATE TABLE verification_tokens (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    token VARCHAR(255) NOT NULL UNIQUE,
-    user_id BIGINT NOT NULL,
-    expiry_date TIMESTAMP NOT NULL,
-    CONSTRAINT fk_token_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+CREATE TABLE verification_tokens
+(
+    id          BIGINT AUTO_INCREMENT PRIMARY KEY,
+    token       VARCHAR(255) NOT NULL UNIQUE,
+    user_id     BIGINT       NOT NULL,
+    expiry_date TIMESTAMP    NOT NULL,
+    CONSTRAINT fk_token_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
 -- 2. VENTAS Y COMPRAS
@@ -148,7 +149,8 @@ CREATE TABLE artists
     phone   VARCHAR(20)  NOT NULL,
     email   VARCHAR(100) NOT NULL,
     genre   VARCHAR(100) NOT NULL,
-    country VARCHAR(100) NOT NULL
+    country VARCHAR(100) NOT NULL,
+    logo    VARCHAR(255)
 );
 
 CREATE TABLE artist_images
