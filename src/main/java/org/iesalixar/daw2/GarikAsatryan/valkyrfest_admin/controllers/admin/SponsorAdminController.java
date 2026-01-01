@@ -10,22 +10,27 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/admin/festival/sponsors")
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('MANAGER')")
 public class SponsorAdminController {
 
     private final SponsorService sponsorService;
     private final MessageSource messageSource;
 
     /**
-     * Lists all sponsors in the database
+     * Lista todos los patrocinadores en la base de datos con paginación.
      */
     @GetMapping
     public String listSponsors(
@@ -41,7 +46,7 @@ public class SponsorAdminController {
     }
 
     /**
-     * Shows the form to create a new sponsor
+     * Muestra el formulario para crear un nuevo patrocinador.
      */
     @GetMapping("/new")
     public String showCreateForm(Model model) {
@@ -51,7 +56,7 @@ public class SponsorAdminController {
     }
 
     /**
-     * Shows the form to edit an existing sponsor
+     * Muestra el formulario para editar un patrocinador existente.
      */
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {
@@ -61,12 +66,13 @@ public class SponsorAdminController {
     }
 
     /**
-     * Saves or updates a sponsor
+     * Guarda o actualiza un patrocinador incluyendo el procesamiento de su imagen.
      */
     @PostMapping("/save")
     public String saveSponsor(
             @Valid @ModelAttribute("sponsor") Sponsor sponsor,
             BindingResult result,
+            @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
             RedirectAttributes redirectAttributes,
             Model model
     ) {
@@ -75,16 +81,22 @@ public class SponsorAdminController {
             return "admin/sponsors/form";
         }
 
-        sponsorService.saveSponsor(sponsor);
-
-        redirectAttributes.addFlashAttribute("successMessage",
-                messageSource.getMessage("msg.admin.sponsor.save.success", null, LocaleContextHolder.getLocale()));
+        try {
+            sponsorService.saveSponsor(sponsor, imageFile);
+            redirectAttributes.addFlashAttribute("successMessage",
+                    messageSource.getMessage("msg.admin.sponsor.save.success", null, LocaleContextHolder.getLocale()));
+        } catch (IOException e) {
+            model.addAttribute("errorMessage",
+                    messageSource.getMessage("msg.admin.error.file_save", null, LocaleContextHolder.getLocale()));
+            model.addAttribute("activePage", "sponsors");
+            return "admin/sponsors/form";
+        }
 
         return "redirect:/admin/festival/sponsors";
     }
 
     /**
-     * Deletes a sponsor by its ID
+     * Elimina un patrocinador por su ID (borrando también su imagen física).
      */
     @GetMapping("/delete/{id}")
     public String deleteSponsor(@PathVariable Long id, RedirectAttributes redirectAttributes) {

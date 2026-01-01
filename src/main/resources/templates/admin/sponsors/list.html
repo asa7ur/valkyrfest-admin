@@ -28,6 +28,7 @@
                 <table class="table table-striped table-hover align-middle mb-0">
                     <thead class="table-dark">
                     <tr>
+                        <th th:text="#{msg.admin.image}">Imagen</th>
                         <th th:replace="~{admin/fragments/table-utils :: column('/admin/festival/sponsors', 'name', #{msg.admin.sponsors.name})}"></th>
                         <th th:text="#{msg.admin.sponsors.phone}">Teléfono</th>
                         <th th:text="#{msg.admin.sponsors.email}">Email</th>
@@ -37,6 +38,18 @@
                     </thead>
                     <tbody>
                     <tr th:each="s : ${sponsors}">
+                        <td>
+                            <div th:if="${s.image != null}">
+                                <img th:src="@{'/uploads/sponsors/' + ${s.image}}"
+                                     class="rounded border shadow-sm"
+                                     style="width: 40px; height: 40px; object-fit: contain; background-color: white;" alt="Sponsor">
+                            </div>
+                            <div th:unless="${s.image != null}"
+                                 class="rounded bg-light border d-flex align-items-center justify-content-center"
+                                 style="width: 40px; height: 40px;">
+                                <i class="bi bi-building text-muted"></i>
+                            </div>
+                        </td>
                         <td class="fw-bold" th:text="${s.name}">Nombre</td>
                         <td th:text="${s.phone}">123456789</td>
                         <td th:text="${s.email}">email@ejemplo.com</td>
@@ -61,7 +74,7 @@
                     </tr>
 
                     <tr th:if="${#lists.isEmpty(sponsors)}">
-                        <td colspan="5"
+                        <td colspan="6"
                             class="text-center py-4 text-muted"
                             th:text="#{msg.admin.sponsors.empty}">
                             No hay patrocinadores registrados.

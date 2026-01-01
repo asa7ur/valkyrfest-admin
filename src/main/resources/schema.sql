@@ -2,6 +2,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS user_role;
 DROP TABLE IF EXISTS roles;
 DROP TABLE IF EXISTS performances;
+DROP TABLE IF EXISTS artist_images;
 DROP TABLE IF EXISTS artists;
 DROP TABLE IF EXISTS sponsor_stage;
 DROP TABLE IF EXISTS stages;
@@ -12,6 +13,7 @@ DROP TABLE IF EXISTS campings;
 DROP TABLE IF EXISTS camping_types;
 DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS verification_tokens;
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- 1. USUARIOS Y SEGURIDAD
@@ -43,7 +45,7 @@ CREATE TABLE user_role
     FOREIGN KEY (role_id) REFERENCES roles (id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS verification_tokens (
+CREATE TABLE verification_tokens (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     token VARCHAR(255) NOT NULL UNIQUE,
     user_id BIGINT NOT NULL,
@@ -147,6 +149,14 @@ CREATE TABLE artists
     email   VARCHAR(100) NOT NULL,
     genre   VARCHAR(100) NOT NULL,
     country VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE artist_images
+(
+    id        BIGINT AUTO_INCREMENT PRIMARY KEY,
+    image_url VARCHAR(255) NOT NULL,
+    artist_id BIGINT       NOT NULL,
+    FOREIGN KEY (artist_id) REFERENCES artists (id) ON DELETE CASCADE
 );
 
 CREATE TABLE performances

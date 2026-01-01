@@ -28,6 +28,7 @@
                 <table class="table table-striped table-hover align-middle mb-0">
                     <thead class="table-dark">
                     <tr>
+                        <th th:text="#{msg.admin.image}">Imagen</th>
                         <th th:replace="~{admin/fragments/table-utils :: column('/admin/festival/artists', 'name', #{msg.admin.artists.name})}"></th>
                         <th th:replace="~{admin/fragments/table-utils :: column('/admin/festival/artists', 'genre', #{msg.admin.artists.genre})}"></th>
                         <th th:replace="~{admin/fragments/table-utils :: column('/admin/festival/artists', 'country', #{msg.admin.artists.country})}"></th>
@@ -38,6 +39,18 @@
                     </thead>
                     <tbody>
                     <tr th:each="artist : ${artists}">
+                        <td>
+                            <div th:if="${not #lists.isEmpty(artist.images)}">
+                                <img th:src="@{'/uploads/artists/' + ${artist.images[0].imageUrl}}"
+                                     class="rounded-circle border shadow-sm"
+                                     style="width: 40px; height: 40px; object-fit: cover;" alt="Artist">
+                            </div>
+                            <div th:unless="${not #lists.isEmpty(artist.images)}"
+                                 class="rounded-circle bg-light border d-flex align-items-center justify-content-center"
+                                 style="width: 40px; height: 40px;">
+                                <i class="bi bi-person text-muted"></i>
+                            </div>
+                        </td>
                         <td class="fw-bold" th:text="${artist.name}">Nombre</td>
                         <td th:text="${artist.genre}">Género</td>
                         <td th:text="${artist.country}">País</td>
@@ -60,7 +73,7 @@
                     </tr>
 
                     <tr th:if="${artists == null || #lists.isEmpty(artists)}">
-                        <td colspan="6" class="text-center py-4 text-muted">
+                        <td colspan="7" class="text-center py-4 text-muted">
                             <i class="bi bi-info-circle d-block fs-2 mb-2"></i>
                             <p th:text="#{msg.admin.no_results}">No se encontraron artistas.</p>
                         </td>
