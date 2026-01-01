@@ -34,54 +34,59 @@ public class ArtistService {
     }
 
     /**
-     * Guarda un artista y procesa múltiples imágenes opcionales.
+     * Guarda un artista gestionando su logo (único) y sus imágenes (múltiples y aditivas).
      */
     @Transactional
-    public void saveArtist(Artist artist, MultipartFile[] imageFiles) throws IOException {
-        // Primero guardamos el artista para asegurar que tiene un ID (si es nuevo)
+    public void saveArtist(Artist artist, MultipartFile logoFile, MultipartFile[] imageFiles) throws IOException {
+        // 1. Gestión del LOGO (Funciona como el del Sponsor: uno solo que se reemplaza)
+        if (logoFile != null && !logoFile.isEmpty()) {
+            if (artist.getId() != null) {
+                artistRepository.findById(artist.getId()).ifPresent(existing -> {
+                    if (existing.getLogo() != null) {
+                        fileService.deleteFile(existing.getLogo(), ARTISTS_FOLDER);
+                    }
+                });
+            }
+            String logoName = fileService.saveFile(logoFile, ARTISTS_FOLDER);
+            artist.setLogo(logoName);
+        } else if (artist.getId() != null) {
+            artistRepository.findById(artist.getId()).ifPresent(existing -> {
+                if (artist.getLogo() == null) {
+                    artist.setLogo(existing.getLogo());
+                }
+            });
+        }
+
         Artist savedArtist = artistRepository.save(artist);
 
-        // Si se han subido archivos, los procesamos
         if (imageFiles != null && imageFiles.length > 0) {
             for (MultipartFile file : imageFiles) {
                 if (!file.isEmpty()) {
-                    // 1. Guardar el archivo físico
                     String fileName = fileService.saveFile(file, ARTISTS_FOLDER);
-
-                    // 2. Crear el objeto de la entidad imagen
                     ArtistImage artistImage = new ArtistImage();
                     artistImage.setImageUrl(fileName);
                     artistImage.setArtist(savedArtist);
-
-                    // 3. Persistir la relación
                     artistImageRepository.save(artistImage);
                 }
             }
         }
     }
 
-    /**
-     * Borra un artista y todas sus imágenes físicas del disco.
-     */
     @Transactional
     public void deleteArtist(Long id) {
         Optional<Artist> artistOpt = artistRepository.findById(id);
         if (artistOpt.isPresent()) {
             Artist artist = artistOpt.get();
-
-            // Borrar los archivos físicos antes de borrar de la BD
+            if (artist.getLogo() != null) {
+                fileService.deleteFile(artist.getLogo(), ARTISTS_FOLDER);
+            }
             for (ArtistImage img : artist.getImages()) {
                 fileService.deleteFile(img.getImageUrl(), ARTISTS_FOLDER);
             }
-
-            // Borrar el artista (el cascade borrará las ArtistImage en la BD)
             artistRepository.delete(artist);
         }
     }
 
-    /**
-     * Borra una imagen específica de un artista.
-     */
     @Transactional
     public void deleteArtistImage(Long imageId) {
         Optional<ArtistImage> imgOpt = artistImageRepository.findById(imageId);

@@ -57,6 +57,7 @@ public class ArtistAdminController {
     public String saveArtist(
             @Valid @ModelAttribute("artist") Artist artist,
             BindingResult result,
+            @RequestParam(value = "logoFile", required = false) MultipartFile logoFile,
             @RequestParam(value = "imageFiles", required = false) MultipartFile[] imageFiles,
             RedirectAttributes redirectAttributes,
             Model model
@@ -67,7 +68,7 @@ public class ArtistAdminController {
         }
 
         try {
-            artistService.saveArtist(artist, imageFiles);
+            artistService.saveArtist(artist, logoFile, imageFiles);
             redirectAttributes.addFlashAttribute("successMessage",
                     messageSource.getMessage("msg.admin.artist.save.success", null, LocaleContextHolder.getLocale()));
         } catch (IOException e) {

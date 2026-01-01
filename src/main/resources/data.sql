@@ -27,17 +27,17 @@ VALUES ('Sombra de Yggdrasil (Camping Sombra)', 30.00, 500, 500),
        ('Drakkar sobre Ruedas (Zona Caravanas)', 80.00, 100, 100);
 
 
-INSERT INTO sponsors (name, phone, email, contribution, image)
-VALUES ('Cruzcampo', '+34 954 979 000', 'sponsorship@heinekenespana.es', 60000.00, 'cruzcampo_logo.png'),
-       ('Thomann Music', '+49 9546 9223', 'export@thomann.de', 25000.00, 'thomann_logo.png'),
-       ('EMP Mailorder', '+34 911 875 528', 'marketing@emp-online.es', 20000.00, 'emp_logo.png'),
-       ('Monster Energy', '+1 800 426 737', 'info@monsterenergy.com', 45000.00, 'monster_logo.png'),
-       ('Jägermeister', '+49 5331 810', 'espana@jaegermeister.de', 30000.00, 'jaegermeister_logo.png'),
-       ('Marshall Amplification', '+44 1908 375411', 'sponsorship@marshall.com', 15000.00, 'marshall_logo.png'),
-       ('Jack Daniels', '+1 888 551 5225', 'events@jackdaniels.com', 28000.00, 'jackdaniels_logo.png'),
-       ('Estrella Galicia', '+34 981 901 906', 'patrocinios@estrellagalicia.es', 35000.00, 'estrella_galicia_logo.png'),
-       ('Vans España', '+34 932 203 100', 'marketing@vans.es', 18000.00, 'vans_logo.png'),
-       ('Fnac España', '+34 902 100 632', 'comunicacion@fnac.es', 12000.00, 'fnac_logo.png');
+INSERT INTO sponsors (name, phone, email, contribution)
+VALUES ('Cruzcampo', '+34 954 979 000', 'sponsorship@heinekenespana.es', 60000.00),
+       ('Thomann Music', '+49 9546 9223', 'export@thomann.de', 25000.00),
+       ('EMP Mailorder', '+34 911 875 528', 'marketing@emp-online.es', 20000.00),
+       ('Monster Energy', '+1 800 426 737', 'info@monsterenergy.com', 45000.00),
+       ('Jägermeister', '+49 5331 810', 'espana@jaegermeister.de', 30000.00),
+       ('Marshall Amplification', '+44 1908 375411', 'sponsorship@marshall.com', 15000.00),
+       ('Jack Daniels', '+1 888 551 5225', 'events@jackdaniels.com', 28000.00),
+       ('Estrella Galicia', '+34 981 901 906', 'patrocinios@estrellagalicia.es', 35000.00),
+       ('Vans España', '+34 932 203 100', 'marketing@vans.es', 18000.00),
+       ('Fnac España', '+34 902 100 632', 'comunicacion@fnac.es', 12000.00);
 
 INSERT INTO stages (name, capacity)
 VALUES ('Asgard del Sur', 15000),
