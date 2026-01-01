@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/fragments/layout :: head(title=#{msg.admin.sponsors.list.title})}"></head>
+
+<body>
+<div th:replace="~{admin/fragments/layout :: navbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="~{admin/fragments/layout :: sidebar}"></div>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2" th:text="#{msg.admin.sponsors.header}">Gestión de Patrocinadores</h1>
+
+                <th:block
+                        th:replace="~{admin/fragments/table-utils :: header-tools('/admin/festival/sponsors', '/admin/festival/sponsors/new', #{msg.admin.sponsors.new})}"></th:block>
+            </div>
+
+            <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <span th:text="${successMessage}">Mensaje de éxito</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            <div class="table-responsive shadow-sm rounded border">
+                <table class="table table-striped table-hover align-middle mb-0">
+                    <thead class="table-dark">
+                    <tr>
+                        <th th:replace="~{admin/fragments/table-utils :: column('/admin/festival/sponsors', 'name', #{msg.admin.sponsors.name})}"></th>
+                        <th th:text="#{msg.admin.sponsors.phone}">Teléfono</th>
+                        <th th:text="#{msg.admin.sponsors.email}">Email</th>
+                        <th th:replace="~{admin/fragments/table-utils :: column('/admin/festival/sponsors', 'contribution', #{msg.admin.sponsors.contribution})}"></th>
+                        <th class="text-center" th:text="#{msg.admin.actions}">Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="s : ${sponsors}">
+                        <td class="fw-bold" th:text="${s.name}">Nombre</td>
+                        <td th:text="${s.phone}">123456789</td>
+                        <td th:text="${s.email}">email@ejemplo.com</td>
+                        <td th:text="${#numbers.formatDecimal(s.contribution, 1, 'NONE', 2, 'POINT')}">
+                            0.00
+                        </td>
+                        <td class="text-center">
+                            <div class="btn-group">
+                                <a th:href="@{/admin/festival/sponsors/edit/{id}(id=${s.id})}"
+                                   class="btn btn-sm btn-warning"
+                                   th:title="#{msg.admin.edit}">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <a th:href="@{/admin/festival/sponsors/delete/{id}(id=${s.id})}"
+                                   class="btn btn-sm btn-danger"
+                                   th:title="#{msg.admin.delete}"
+                                   th:onclick="|return confirm('#{msg.admin.sponsors.confirm_delete}')|">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr th:if="${#lists.isEmpty(sponsors)}">
+                        <td colspan="5"
+                            class="text-center py-4 text-muted"
+                            th:text="#{msg.admin.sponsors.empty}">
+                            No hay patrocinadores registrados.
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div th:replace="~{admin/fragments/table-utils :: pagination-nav('/admin/festival/sponsors')}"></div>
+        </main>
+    </div>
+</div>
+
+<div th:replace="~{admin/fragments/layout :: scripts}"></div>
+</body>
+</html>

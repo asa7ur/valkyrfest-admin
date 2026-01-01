@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/fragments/layout :: head(title=(${performance.id == null} ? #{msg.admin.performances.form.header.new} : #{msg.admin.performances.form.header.edit}))}"></head>
+<body>
+<div th:replace="~{admin/fragments/layout :: navbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="~{admin/fragments/layout :: sidebar}"></div>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2"
+                    th:text="${performance.id == null} ? #{msg.admin.performances.form.header.new} : #{msg.admin.performances.form.header.edit}">
+                    Formulario de Presentación</h1>
+                <a th:href="@{/admin/festival/performances}" class="btn btn-sm btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> <span
+                        th:text="#{msg.admin.back_to_list}">Volver al cronograma</span>
+                </a>
+            </div>
+
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <form th:action="@{/admin/festival/performances/save}" th:object="${performance}" method="post">
+                        <input type="hidden" th:field="*{id}"/>
+
+                        <div th:if="${#fields.hasErrors('global')}" class="alert alert-danger">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <ul>
+                                <li th:each="err : ${#fields.errors('global')}" th:text="${err}"></li>
+                            </ul>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label for="perfArtist" class="form-label fw-bold"
+                                       th:text="#{msg.admin.performances.artist}">Artista / Banda</label>
+                                <select th:field="*{artist}" id="perfArtist" class="form-select"
+                                        th:errorclass="is-invalid">
+                                    <option value="" th:text="#{msg.admin.performances.form.select_artist}">--
+                                        Selecciona un artista --
+                                    </option>
+                                    <option th:each="a : ${artists}" th:value="${a.id}" th:text="${a.name}"></option>
+                                </select>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('artist')}"
+                                     th:errors="*{artist}"></div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="perfStage" class="form-label fw-bold"
+                                       th:text="#{msg.admin.performances.stage}">Escenario</label>
+                                <select th:field="*{stage}" id="perfStage" class="form-select"
+                                        th:errorclass="is-invalid">
+                                    <option value="" th:text="#{msg.admin.performances.form.select_stage}">-- Selecciona
+                                        un escenario --
+                                    </option>
+                                    <option th:each="s : ${stages}" th:value="${s.id}"
+                                            th:text="|${s.name} (#{msg.admin.stages.capacity}: ${s.capacity})|"></option>
+                                </select>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('stage')}"
+                                     th:errors="*{stage}"></div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label for="perfStartTime" class="form-label fw-bold"
+                                       th:text="#{msg.admin.performances.start}">Fecha e Inicio</label>
+                                <input type="datetime-local" th:field="*{startTime}" id="perfStartTime"
+                                       class="form-control" th:errorclass="is-invalid">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('startTime')}"
+                                     th:errors="*{startTime}"></div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="perfEndTime" class="form-label fw-bold"
+                                       th:text="#{msg.admin.performances.end}">Fecha y Finalización</label>
+                                <input type="datetime-local" th:field="*{endTime}" id="perfEndTime" class="form-control"
+                                       th:errorclass="is-invalid">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('endTime')}"
+                                     th:errors="*{endTime}"></div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="reset" class="btn btn-light border" th:text="#{msg.admin.reset}">Limpiar
+                            </button>
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="bi bi-calendar-check me-1"></i>
+                                <span th:text="${performance.id} == null ? #{msg.admin.save} : #{msg.admin.update}">Guardar</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<div th:replace="~{admin/fragments/layout :: scripts}"></div>
+</body>
+</html>

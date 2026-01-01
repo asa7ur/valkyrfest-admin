@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/fragments/layout :: head(title=#{msg.admin.users.title})}"></head>
+
+<body>
+<div th:replace="~{admin/fragments/layout :: navbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="~{admin/fragments/layout :: sidebar}"></div>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom gap-3">
+                <h1 class="h2 mb-0" th:text="#{msg.admin.users.title}">Usuarios</h1>
+
+                <th:block
+                        th:replace="~{admin/fragments/table-utils :: header-tools('/admin/festival/users', '/admin/festival/users/new', #{msg.admin.users.new})}"></th:block>
+            </div>
+
+            <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <span th:text="${successMessage}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            <div class="table-responsive shadow-sm rounded border">
+                <table class="table table-striped table-hover align-middle mb-0">
+                    <thead class="table-dark">
+                    <tr>
+                        <th th:replace="~{admin/fragments/table-utils :: column('/admin/festival/users', 'firstName', #{msg.admin.artists.name})}"></th>
+                        <th th:replace="~{admin/fragments/table-utils :: column('/admin/festival/users', 'email', 'Email')}"></th>
+                        <th th:text="#{msg.register.phone}">Teléfono</th>
+                        <th th:replace="~{admin/fragments/table-utils :: column('/admin/festival/users', 'enabled', #{msg.admin.users.status})}"></th>
+                        <th class="text-center" th:text="#{msg.admin.actions}">Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="user : ${users}">
+                        <td>
+                            <span class="fw-bold" th:text="|${user.firstName} ${user.lastName}|">Nombre</span>
+                        </td>
+                        <td th:text="${user.email}">email@ejemplo.com</td>
+                        <td th:text="${user.phone}">+34 000...</td>
+                        <td>
+                        <span class="badge"
+                              th:classappend="${user.enabled ? 'bg-success' : 'bg-danger'}"
+                              th:text="${user.enabled ? #messages.msg('msg.admin.users.active') : #messages.msg('msg.admin.users.disabled')}">
+                        </span>
+                        </td>
+                        <td class="text-center">
+                            <div class="btn-group">
+                                <a th:href="@{/admin/festival/users/edit/{id}(id=${user.id})}"
+                                   class="btn btn-sm btn-warning" th:title="#{msg.admin.edit}">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <a th:href="@{/admin/festival/users/delete/{id}(id=${user.id})}"
+                                   class="btn btn-sm btn-danger"
+                                   th:title="#{msg.admin.delete}"
+                                   th:onclick="|return confirm('#{msg.admin.confirm_delete_user}')|">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr th:if="${users == null || #lists.isEmpty(users)}">
+                        <td colspan="5" class="text-center py-5 text-muted">
+                            <i class="bi bi-info-circle d-block fs-2 mb-2"></i>
+                            <p th:text="#{msg.admin.no_results}">No se encontraron usuarios.</p>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div th:replace="~{admin/fragments/table-utils :: pagination-nav('/admin/festival/users')}"></div>
+
+        </main>
+    </div>
+</div>
+
+<div th:replace="~{admin/fragments/layout :: scripts}"></div>
+</body>
+</html>

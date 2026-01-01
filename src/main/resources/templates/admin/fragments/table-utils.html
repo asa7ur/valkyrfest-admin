@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="header-tools(baseUrl, newUrl, newLabel)" class="flex-grow-1">
+    <form th:action="@{${baseUrl}}" method="get"
+          class="d-flex flex-wrap flex-md-nowrap justify-content-end align-items-center gap-2">
+
+        <input type="hidden" name="sort" th:value="|${sortField ?: 'id'},${sortDir ?: 'asc'}|">
+
+        <div class="input-group input-group-sm" style="width: 280px;"><input type="text" name="searchTerm"
+                                                                             class="form-control"
+                                                                             th:value="${searchTerm}"
+                                                                             th:placeholder="#{msg.admin.search}">
+
+            <button class="btn btn-outline-secondary" type="submit" th:title="#{msg.admin.search}">
+                <i class="bi bi-search"></i>
+            </button>
+
+            <a th:if="${searchTerm != null && !searchTerm.isEmpty() || sortField != 'id'}"
+               th:href="@{${baseUrl}}"
+               class="btn btn-outline-danger"
+               th:title="#{msg.admin.clear_filters}">
+                <i class="bi bi-x-circle"></i>
+            </a>
+        </div>
+
+        <select name="size" class="form-select form-select-sm" onchange="this.form.submit()" style="width: auto;">
+            <option th:each="s : ${pageSizes}"
+                    th:value="${s}"
+                    th:text="${s}"
+                    th:selected="${pageSize == s}">
+            </option>
+        </select>
+
+        <a th:if="${newUrl != null}" th:href="@{${newUrl}}" class="btn btn-sm btn-outline-primary">
+            <i class="bi bi-plus-circle me-1"></i>
+            <span th:text="${newLabel}">Nuevo</span>
+        </a>
+    </form>
+</div>
+
+
+<th th:fragment="column(baseUrl, fieldName, label)" scope="col">
+    <a class="text-white text-decoration-none d-flex align-items-center gap-1"
+       th:href="@{${baseUrl}(sort=|${fieldName},${sortField == fieldName && sortDir == 'ASC' ? 'DESC' : 'ASC'}|, size=${pageSize}, searchTerm=${searchTerm})}">
+
+        <span th:text="${label}">Columna</span>
+
+        <span class="small">
+            <i th:if="${sortField == fieldName && sortDir == 'ASC'}" class="bi bi-caret-up-fill text-info"></i>
+            <i th:if="${sortField == fieldName && sortDir == 'DESC'}" class="bi bi-caret-down-fill text-info"></i>
+            <i th:if="${sortField != fieldName}" class="bi bi-sort opacity-50"></i>
+        </span>
+    </a>
+</th>
+
+
+<nav th:fragment="pagination-nav(baseUrl)" th:if="${totalPages > 0}" class="mt-4" aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+
+        <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+            <a class="page-link"
+               th:href="@{${baseUrl}(page=${currentPage - 1}, size=${pageSize}, searchTerm=${searchTerm}, sort=|${sortField},${sortDir}|)}">
+                <i class="bi bi-chevron-left"></i>
+            </a>
+        </li>
+
+        <li class="page-item" th:classappend="${currentPage == 0} ? 'active shadow-sm'">
+            <a class="page-link"
+               th:href="@{${baseUrl}(page=0, size=${pageSize}, searchTerm=${searchTerm}, sort=|${sortField},${sortDir}|)}">1</a>
+        </li>
+
+        <li class="page-item disabled" th:if="${currentPage > 2}">
+            <span class="page-link">...</span>
+        </li>
+
+        <th:block th:if="${totalPages > 2}">
+
+            <li class="page-item"
+                th:each="i : ${#numbers.sequence(1, totalPages - 2)}"
+                th:if="${i >= currentPage - 1 && i <= currentPage + 1}"
+                th:classappend="${i == currentPage} ? 'active shadow-sm'">
+
+                <a class="page-link"
+                   th:href="@{${baseUrl}(page=${i}, size=${pageSize}, searchTerm=${searchTerm}, sort=|${sortField},${sortDir}|)}"
+                   th:text="${i + 1}">2</a>
+            </li>
+
+        </th:block>
+
+        <li class="page-item disabled" th:if="${currentPage < totalPages - 3}">
+            <span class="page-link">...</span>
+        </li>
+
+        <li class="page-item" th:if="${totalPages > 1}"
+            th:classappend="${currentPage == totalPages - 1} ? 'active shadow-sm'">
+            <a class="page-link"
+               th:href="@{${baseUrl}(page=${totalPages - 1}, size=${pageSize}, searchTerm=${searchTerm}, sort=|${sortField},${sortDir}|)}"
+               th:text="${totalPages}">10</a>
+        </li>
+
+        <li class="page-item" th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
+            <a class="page-link"
+               th:href="@{${baseUrl}(page=${currentPage + 1}, size=${pageSize}, searchTerm=${searchTerm}, sort=|${sortField},${sortDir}|)}">
+                <i class="bi bi-chevron-right"></i>
+            </a>
+        </li>
+    </ul>
+</nav>
+
+</html>

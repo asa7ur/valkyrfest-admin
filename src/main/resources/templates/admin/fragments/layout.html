@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title} + ' - ' + #{msg.admin.layout.panel_title}">Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-size: .875rem;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            padding: 48px 0 0;
+            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+        }
+
+        .sidebar-sticky {
+            position: relative;
+            top: 0;
+            height: calc(100vh - 48px);
+            padding-top: .5rem;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .sidebar .nav-link {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .sidebar .nav-link.active {
+            color: #007bff;
+        }
+
+        .navbar-brand {
+            padding-top: .75rem;
+            padding-bottom: .75rem;
+            background-color: rgba(0, 0, 0, .25);
+        }
+    </style>
+</head>
+<body>
+
+<header th:fragment="navbar" class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" th:href="@{/admin/dashboard}"
+       th:text="#{msg.admin.layout.panel}">Valkyrfest Panel</a>
+
+    <div class="d-flex align-items-center me-3">
+        <div class="dropdown me-3">
+            <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                <i class="bi bi-translate me-1"></i> <span th:text="#{msg.admin.language}">Idioma</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" th:href="${@urlBuilder.buildUrl('lang', 'es')}">Español</a></li>
+                <li><a class="dropdown-item" th:href="${@urlBuilder.buildUrl('lang', 'en')}">English</a></li>
+                <li><a class="dropdown-item" th:href="${@urlBuilder.buildUrl('lang', 'fr')}">Français</a></li>
+                <li><a class="dropdown-item" th:href="${@urlBuilder.buildUrl('lang', 'de')}">Deutsch</a></li>
+                <li><a class="dropdown-item" th:href="${@urlBuilder.buildUrl('lang', 'ru')}">Русский</a></li>
+            </ul>
+        </div>
+
+        <form th:action="@{/logout}" method="post" class="navbar-nav">
+            <div class="nav-item text-nowrap">
+                <button type="submit" class="btn btn-link nav-link px-3" th:text="#{msg.admin.layout.logout}">Cerrar
+                    Sesión
+                </button>
+            </div>
+        </form>
+    </div>
+</header>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav th:fragment="sidebar" id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+            <div class="sidebar-sticky pt-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" th:classappend="${activePage == 'dashboard' ? 'active' : ''}"
+                           th:href="@{/admin/dashboard}">
+                            <i class="bi bi-house-door me-2"></i> <span
+                                th:text="#{msg.admin.dashboard.title}">Dashboard</span>
+                        </a>
+                    </li>
+
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
+                        <span th:text="#{msg.admin.layout.festival_management}">Gestión Festival</span>
+                    </h6>
+                    <li class="nav-item" sec:authorize="hasRole('Admin')">
+                        <a class="nav-link" th:classappend="${activePage == 'users' ? 'active' : ''}"
+                           th:href="@{/admin/festival/users}">
+                            <i class="bi bi-people me-2"></i> <span th:text="#{msg.admin.users.title}">Usuarios</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:classappend="${activePage == 'artists' ? 'active' : ''}"
+                           th:href="@{/admin/festival/artists}">
+                            <i class="bi bi-music-note-beamed me-2"></i> <span th:text="#{msg.admin.artists.title}">Artistas</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:classappend="${activePage == 'stages' ? 'active' : ''}"
+                           th:href="@{/admin/festival/stages}">
+                            <i class="bi bi-layers me-2"></i> <span
+                                th:text="#{msg.admin.stages.title}">Escenarios</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:classappend="${activePage == 'performances' ? 'active' : ''}"
+                           th:href="@{/admin/festival/performances}">
+                            <i class="bi bi-calendar-event me-2"></i> <span th:text="#{msg.admin.performances.title}">Presentaciones</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:classappend="${activePage == 'sponsors' ? 'active' : ''}"
+                           th:href="@{/admin/festival/sponsors}">
+                            <i class="bi bi-patch-check me-2"></i> <span th:text="#{msg.admin.sponsors.title}">Patrocinadores</span>
+                        </a>
+                    </li>
+
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
+                        <span th:text="#{msg.admin.layout.sales_lodging}">Ventas y Alojamiento</span>
+                    </h6>
+                    <li class="nav-item"><a class="nav-link" th:classappend="${activePage == 'orders' ? 'active' : ''}"
+                                            th:href="@{/admin/festival/orders}"><i class="bi bi-cart me-2"></i> <span
+                            th:text="#{msg.admin.orders.title}">Pedidos</span></a></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            th:classappend="${activePage == 'ticketTypes' ? 'active' : ''}"
+                                            th:href="@{/admin/festival/ticket-types}"><i class="bi bi-tags me-2"></i>
+                        <span th:text="#{msg.admin.ticket_types.title}">Tipos Entradas</span></a></li>
+                    <li class="nav-item"><a class="nav-link" th:classappend="${activePage == 'tickets' ? 'active' : ''}"
+                                            th:href="@{/admin/festival/tickets}"><i
+                            class="bi bi-ticket-perforated me-2"></i> <span
+                            th:text="#{msg.admin.tickets.title}">Tickets</span></a></li>
+                    <li class="nav-item"><a class="nav-link"
+                                            th:classappend="${activePage == 'campingTypes' ? 'active' : ''}"
+                                            th:href="@{/admin/festival/camping-types}"><i
+                            class="bi bi-house-gear me-2"></i> <span th:text="#{msg.admin.camping_types.title}">Tipos Camping</span></a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link"
+                                            th:classappend="${activePage == 'campings' ? 'active' : ''}"
+                                            th:href="@{/admin/festival/campings}"><i class="bi bi-tree me-2"></i> <span
+                            th:text="#{msg.admin.campings.title}">Estancias Camping</span></a></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+</div>
+
+<div th:fragment="scripts">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</div>
+</body>
+</html>

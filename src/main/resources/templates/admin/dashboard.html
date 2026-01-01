@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{admin/fragments/layout :: head(title=#{msg.admin.dashboard.title})}"></head>
+<body>
+<div th:replace="~{admin/fragments/layout :: navbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="~{admin/fragments/layout :: sidebar}"></div>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2" th:text="#{msg.admin.dashboard.header}">Dashboard</h1>
+            </div>
+
+            <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4 mb-4">
+                <div class="col">
+                    <div class="card h-100 border-primary shadow-sm text-center">
+                        <div class="card-body">
+                            <i class="bi bi-music-note-beamed fs-1 text-primary"></i>
+                            <h5 class="card-title mt-2" th:text="#{msg.admin.artists.title}">Artistas</h5>
+                            <p class="card-text display-6 fw-bold" th:text="${artistCount}">0</p>
+                            <a th:href="@{/admin/festival/artists}" class="btn btn-outline-primary btn-sm"
+                               th:text="#{msg.admin.manage}">Gestionar</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100 border-success shadow-sm text-center">
+                        <div class="card-body">
+                            <i class="bi bi-layers fs-1 text-success"></i>
+                            <h5 class="card-title mt-2" th:text="#{msg.admin.stages.title}">Escenarios</h5>
+                            <p class="card-text display-6 fw-bold" th:text="${stageCount}">0</p>
+                            <a th:href="@{/admin/festival/stages}" class="btn btn-outline-success btn-sm"
+                               th:text="#{msg.admin.manage}">Gestionar</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100 border-warning shadow-sm text-center">
+                        <div class="card-body">
+                            <i class="bi bi-calendar-event fs-1 text-warning"></i>
+                            <h5 class="card-title mt-2" th:text="#{msg.admin.performances.title}">Presentaciones</h5>
+                            <p class="card-text display-6 fw-bold" th:text="${performanceCount}">0</p>
+                            <a th:href="@{/admin/festival/performances}" class="btn btn-outline-warning btn-sm"
+                               th:text="#{msg.admin.manage}">Gestionar</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100 border-info shadow-sm text-center">
+                        <div class="card-body">
+                            <i class="bi bi-patch-check fs-1 text-info"></i>
+                            <h5 class="card-title mt-2" th:text="#{msg.admin.sponsors.title}">Patrocinadores</h5>
+                            <p class="card-text display-6 fw-bold" th:text="${sponsorCount}">0</p>
+                            <a th:href="@{/admin/festival/sponsors}" class="btn btn-outline-info btn-sm"
+                               th:text="#{msg.admin.manage}">Gestionar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4 mb-4">
+                <div class="col">
+                    <div class="card h-100 border-dark shadow-sm text-center">
+                        <div class="card-body">
+                            <i class="bi bi-cart fs-1 text-dark"></i>
+                            <h5 class="card-title mt-2" th:text="#{msg.admin.orders.title}">Pedidos</h5>
+                            <p class="card-text display-6 fw-bold" th:text="${orderCount}">0</p>
+                            <a th:href="@{/admin/festival/orders}" class="btn btn-outline-dark btn-sm"
+                               th:text="#{msg.admin.manage}">Gestionar</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100 border-secondary shadow-sm text-center">
+                        <div class="card-body">
+                            <i class="bi bi-ticket-perforated fs-1 text-secondary"></i>
+                            <h5 class="card-title mt-2" th:text="#{msg.admin.tickets.title}">Tickets</h5>
+                            <p class="card-text display-6 fw-bold" th:text="${ticketCount}">0</p>
+                            <a th:href="@{/admin/festival/tickets}" class="btn btn-outline-secondary btn-sm"
+                               th:text="#{msg.admin.manage}">Gestionar</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100 border-danger shadow-sm text-center">
+                        <div class="card-body">
+                            <i class="bi bi-tree fs-1 text-danger"></i>
+                            <h5 class="card-title mt-2" th:text="#{msg.admin.campings.title}">Alojamiento</h5>
+                            <p class="card-text display-6 fw-bold" th:text="${campingCount}">0</p>
+                            <a th:href="@{/admin/festival/campings}" class="btn btn-outline-danger btn-sm"
+                               th:text="#{msg.admin.manage}">Gestionar</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100 border-dark shadow-sm text-center">
+                        <div class="card-body">
+                            <i class="bi bi-people fs-1 text-dark"></i>
+                            <h5 class="card-title mt-2" th:text="#{msg.admin.users.title}">Usuarios</h5>
+                            <p class="card-text display-6 fw-bold" th:text="${userCount}">0</p>
+                            <a th:href="@{/admin/festival/users}" sec:authorize="hasRole('Admin')"
+                               class="btn btn-outline-dark btn-sm" th:text="#{msg.admin.manage}">Gestionar</a>
+                            <button sec:authorize="!hasRole('Admin')" class="btn btn-outline-secondary btn-sm" disabled
+                                    th:text="#{msg.admin.dashboard.only_admin}">Solo Admin
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-5 mb-4 bg-light rounded-3 shadow-sm border text-center">
+                <h2 class="display-5 fw-bold" th:text="#{msg.admin.dashboard.welcome_title}">¡Bienvenido!</h2>
+                <p class="fs-4" th:text="#{msg.admin.dashboard.welcome_msg}">Gestiona la logística desde el menú
+                    lateral.</p>
+            </div>
+        </main>
+    </div>
+</div>
+
+<div th:replace="~{admin/fragments/layout :: scripts}"></div>
+</body>
+</html>

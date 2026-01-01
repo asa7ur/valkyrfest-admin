@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/fragments/layout :: head(title=(${ticket.id == null} ? #{msg.admin.tickets.form.header.new} : #{msg.admin.tickets.form.header.edit}))}"></head>
+<body>
+<div th:replace="~{admin/fragments/layout :: navbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="~{admin/fragments/layout :: sidebar}"></div>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2"
+                    th:text="${ticket.id == null} ? #{msg.admin.tickets.form.header.new} : #{msg.admin.tickets.form.header.edit}"></h1>
+                <a th:href="@{/admin/festival/tickets}" class="btn btn-sm btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> <span th:text="#{msg.admin.back_to_list}">Volver</span>
+                </a>
+            </div>
+
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <form th:action="@{/admin/festival/tickets/save}" th:object="${ticket}" method="post">
+                        <input type="hidden" th:field="*{id}"/>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold" th:text="#{msg.register.firstName}">Nombre</label>
+                                <input type="text" th:field="*{firstName}" class="form-control"
+                                       th:errorclass="is-invalid">
+                                <div class="invalid-feedback" th:errors="*{firstName}"></div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold" th:text="#{msg.register.lastName}">Apellido</label>
+                                <input type="text" th:field="*{lastName}" class="form-control"
+                                       th:errorclass="is-invalid">
+                                <div class="invalid-feedback" th:errors="*{lastName}"></div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-bold" th:text="#{msg.admin.tickets.form.docType}">Tipo
+                                    Documento</label>
+                                <select th:field="*{documentType}" class="form-select">
+                                    <option th:each="dt : ${docTypes}" th:value="${dt}" th:text="${dt}"></option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-bold" th:text="#{msg.admin.tickets.form.docNumber}">Núm.
+                                    Documento</label>
+                                <input type="text" th:field="*{documentNumber}" class="form-control"
+                                       th:errorclass="is-invalid">
+                                <div class="invalid-feedback" th:errors="*{documentNumber}"></div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-bold" th:text="#{msg.register.birthDate}">Fecha Nac.</label>
+                                <input type="date" th:field="*{birthDate}" class="form-control"
+                                       th:errorclass="is-invalid">
+                                <div class="invalid-feedback" th:errors="*{birthDate}"></div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-bold" th:text="#{msg.admin.tickets.form.ticketType}">Tipo
+                                    Entrada</label>
+                                <select th:field="*{ticketType}" class="form-select">
+                                    <option th:each="tt : ${ticketTypes}" th:value="${tt.id}"
+                                            th:text="${tt.name}"></option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-bold" th:text="#{msg.admin.tickets.form.orderId}">Pedido
+                                    (Order ID)</label>
+                                <select th:field="*{order}" class="form-select">
+                                    <option th:each="o : ${orders}" th:value="${o.id}"
+                                            th:text="|ID: ${o.id} - ${o.user.email}|"></option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-bold"
+                                       th:text="#{msg.admin.tickets.form.state}">Estado</label>
+                                <select th:field="*{status}" class="form-select">
+                                    <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="reset" class="btn btn-light border" th:text="#{msg.admin.reset}">Limpiar
+                            </button>
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="bi bi-save me-1"></i>
+                                <span th:text="${ticket.id == null} ? #{msg.admin.save} : #{msg.admin.update}">Guardar</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<div th:replace="~{admin/fragments/layout :: scripts}"></div>
+</body>
+</html>

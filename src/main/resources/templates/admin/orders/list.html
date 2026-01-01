@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/fragments/layout :: head(title=#{msg.admin.orders.list.title})}"></head>
+<body>
+<div th:replace="~{admin/fragments/layout :: navbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="~{admin/fragments/layout :: sidebar}"></div>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2" th:text="#{msg.admin.orders.header}">Gestión de Pedidos</h1>
+                <th:block
+                        th:replace="~{admin/fragments/table-utils :: header-tools('/admin/festival/orders', '/admin/festival/orders/new', #{msg.admin.orders.new})}"></th:block>
+            </div>
+
+            <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <span th:text="${successMessage}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            <div class="table-responsive shadow-sm rounded border">
+                <table class="table table-striped table-hover align-middle mb-0">
+                    <thead class="table-dark">
+                    <tr>
+                        <th th:replace="~{admin/fragments/table-utils :: column('/admin/festival/orders', 'orderDate', #{msg.admin.orders.date})}"></th>
+                        <th th:replace="~{admin/fragments/table-utils :: column('/admin/festival/orders', 'user.name', #{msg.admin.orders.user})}"></th>
+                        <th th:replace="~{admin/fragments/table-utils :: column('/admin/festival/orders', 'totalPrice', #{msg.admin.orders.total})}"></th>
+                        <th th:replace="~{admin/fragments/table-utils :: column('/admin/festival/orders', 'status', #{msg.admin.orders.status})}"></th>
+                        <th class="text-center" th:text="#{msg.admin.actions}">Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="order : ${orders}">
+                        <td th:text="${#temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm')}">Fecha</td>
+                        <td th:text="|${order.user.firstName} ${order.user.lastName} (${order.user.email})|">
+                            user@example.com
+                        </td>
+                        <td class="fw-bold" th:text="${order.totalPrice} + ' €'">0.00 €</td>
+                        <td>
+                            <span class="badge"
+                                  th:classappend="${order.status.name() == 'PAID' ? 'bg-success' : (order.status.name() == 'PENDING' ? 'bg-warning' : 'bg-danger')}"
+                                  th:text="${order.status}">Status</span>
+                        </td>
+                        <td class="text-center">
+                            <div class="btn-group">
+                                <a th:href="@{/admin/festival/orders/edit/{id}(id=${order.id})}"
+                                   class="btn btn-sm btn-warning" th:title="#{msg.admin.edit}">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <a th:href="@{/admin/festival/orders/delete/{id}(id=${order.id})}"
+                                   class="btn btn-sm btn-danger"
+                                   th:title="#{msg.admin.delete}"
+                                   th:onclick="|return confirm('#{msg.admin.orders.confirm_delete}')|">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(orders)}">
+                        <td colspan="5" class="text-center py-5 text-muted">
+                            <i class="bi bi-info-circle d-block fs-2 mb-2"></i>
+                            <p th:text="#{msg.admin.no_results}">No se encontraron pedidos.</p>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div th:replace="~{admin/fragments/table-utils :: pagination-nav('/admin/festival/orders')}"></div>
+        </main>
+    </div>
+</div>
+
+<div th:replace="~{admin/fragments/layout :: scripts}"></div>
+</body>
+</html>

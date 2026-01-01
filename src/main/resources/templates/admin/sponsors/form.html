@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/fragments/layout :: head(title=(${sponsor.id == null} ? #{msg.admin.sponsors.form.header.new} : #{msg.admin.sponsors.form.header.edit}))}"></head>
+<body>
+<div th:replace="~{admin/fragments/layout :: navbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="~{admin/fragments/layout :: sidebar}"></div>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2"
+                    th:text="${sponsor.id == null} ? #{msg.admin.sponsors.form.header.new} : #{msg.admin.sponsors.form.header.edit}"></h1>
+                <a th:href="@{/admin/festival/sponsors}" class="btn btn-sm btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> <span th:text="#{msg.admin.back_to_list}">Volver</span>
+                </a>
+            </div>
+
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <form th:action="@{/admin/festival/sponsors/save}" th:object="${sponsor}" method="post">
+                        <input type="hidden" th:field="*{id}"/>
+
+                        <div class="mb-3">
+                            <label for="sName" class="form-label fw-bold"
+                                   th:text="#{msg.admin.sponsors.name}">Nombre</label>
+                            <input type="text" th:field="*{name}" id="sName"
+                                   class="form-control" th:errorclass="is-invalid">
+                            <div class="invalid-feedback" th:errors="*{name}"></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="sPhone" class="form-label fw-bold"
+                                       th:text="#{msg.admin.sponsors.phone}">Teléfono</label>
+                                <input type="text" th:field="*{phone}" id="sPhone"
+                                       class="form-control" th:errorclass="is-invalid">
+                                <div class="invalid-feedback" th:errors="*{phone}"></div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="sEmail" class="form-label fw-bold"
+                                       th:text="#{msg.admin.sponsors.email}">Email</label>
+                                <input type="email" th:field="*{email}" id="sEmail"
+                                       class="form-control" th:errorclass="is-invalid">
+                                <div class="invalid-feedback" th:errors="*{email}"></div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="sContribution" class="form-label fw-bold"
+                                       th:text="#{msg.admin.sponsors.contribution}">Contribución</label>
+                                <input type="number" step="0.01" th:field="*{contribution}"
+                                       id="sContribution" class="form-control"
+                                       th:errorclass="is-invalid">
+                                <div class="invalid-feedback" th:errors="*{contribution}"></div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="sImage" class="form-label fw-bold"
+                                       th:text="#{msg.admin.sponsors.image}">Imagen</label>
+                                <input type="text" th:field="*{image}" id="sImage"
+                                       class="form-control" placeholder="logo.png">
+                                <div class="invalid-feedback" th:errors="*{image}"></div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="reset" class="btn btn-light border"
+                                    th:text="#{msg.admin.reset}">Limpiar
+                            </button>
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="bi bi-save me-1"></i>
+                                <span th:text="${sponsor.id == null} ? #{msg.admin.save} : #{msg.admin.update}">
+                                    Guardar
+                                </span>
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<div th:replace="~{admin/fragments/layout :: scripts}"></div>
+</body>
+</html>

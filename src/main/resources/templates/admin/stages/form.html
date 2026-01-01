@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/fragments/layout :: head(title=(${stage.id == null} ? #{msg.admin.stages.form.header.new} : #{msg.admin.stages.form.header.edit}))}"></head>
+<body>
+<div th:replace="~{admin/fragments/layout :: navbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="~{admin/fragments/layout :: sidebar}"></div>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2"
+                    th:text="${stage.id == null} ? #{msg.admin.stages.form.header.new} : #{msg.admin.stages.form.header.edit}">
+                    Formulario de Escenario</h1>
+                <a th:href="@{/admin/festival/stages}" class="btn btn-sm btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> <span th:text="#{msg.admin.back_to_list}">Volver al listado</span>
+                </a>
+            </div>
+
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <form th:action="@{/admin/festival/stages/save}" th:object="${stage}" method="post">
+                        <input type="hidden" th:field="*{id}"/>
+
+                        <div class="row g-3">
+                            <div class="col-md-8">
+                                <label for="stageName" class="form-label fw-bold" th:text="#{msg.admin.stages.name}">Nombre
+                                    del Escenario</label>
+                                <div class="input-group has-validation">
+                                    <span class="input-group-text"><i class="bi bi-megaphone"></i></span>
+                                    <input type="text" th:field="*{name}" id="stageName" class="form-control"
+                                           th:errorclass="is-invalid"
+                                           th:placeholder="#{msg.admin.stages.form.placeholder.name}">
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}"
+                                         th:errors="*{name}"></div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label for="stageCapacity" class="form-label fw-bold"
+                                       th:text="#{msg.admin.stages.capacity}">Capacidad Máxima</label>
+                                <div class="input-group has-validation">
+                                    <span class="input-group-text"><i class="bi bi-people"></i></span>
+                                    <input type="number" th:field="*{capacity}" id="stageCapacity" class="form-control"
+                                           th:errorclass="is-invalid" placeholder="0">
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('capacity')}"
+                                         th:errors="*{capacity}"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="reset" class="btn btn-light border" th:text="#{msg.admin.reset}">Limpiar
+                            </button>
+                            <button type="submit" class="btn btn-success px-4">
+                                <i class="bi bi-save me-1"></i>
+                                <span th:text="${stage.id == null} ? #{msg.admin.save} : #{msg.admin.update}">Guardar</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<div th:replace="~{admin/fragments/layout :: scripts}"></div>
+</body>
+</html>
