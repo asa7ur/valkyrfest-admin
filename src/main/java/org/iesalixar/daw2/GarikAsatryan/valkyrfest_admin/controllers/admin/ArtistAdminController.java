@@ -80,12 +80,12 @@ public class ArtistAdminController {
 
         return "redirect:/admin/festival/artists";
     }
-    
+
     @GetMapping("/delete-logo/{id}")
     public String deleteLogo(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         artistService.deleteLogo(id);
         redirectAttributes.addFlashAttribute("successMessage",
-                messageSource.getMessage("msg.admin.artist.logo.delete.success", null, LocaleContextHolder.getLocale()));
+                messageSource.getMessage("msg.admin.logo.delete.success", null, LocaleContextHolder.getLocale()));
         return "redirect:/admin/festival/artists/edit/" + id;
     }
 
@@ -94,7 +94,7 @@ public class ArtistAdminController {
     public String deleteImage(@PathVariable Long artistId, @PathVariable Long imageId, RedirectAttributes redirectAttributes) {
         artistService.deleteArtistImage(imageId);
         redirectAttributes.addFlashAttribute("successMessage",
-                messageSource.getMessage("msg.admin.artist.image.delete.success", null, LocaleContextHolder.getLocale()));
+                messageSource.getMessage("msg.admin.image.delete.success", null, LocaleContextHolder.getLocale()));
         return "redirect:/admin/festival/artists/edit/" + artistId;
     }
 
