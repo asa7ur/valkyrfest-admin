@@ -12,6 +12,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping("/admin/festival/orders")
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('MANAGER')")
 public class OrderAdminController {
 
     private final OrderService orderService;
@@ -96,6 +98,7 @@ public class OrderAdminController {
      * Deletes an order by its ID
      */
     @GetMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public String deleteOrder(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         orderService.deleteOrder(id);
 

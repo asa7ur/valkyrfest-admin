@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/fragments/layout :: head(#{msg.error.notFound.title})}"></head>
+<body class="bg-light">
+<header th:replace="~{admin/fragments/layout :: navbar}"></header>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav th:replace="~{admin/fragments/layout :: sidebar}"></nav>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+                <div class="text-center bg-white p-5 rounded shadow-sm">
+                    <i class="bi bi-search text-warning" style="font-size: 5rem;"></i>
+                    <h1 class="display-1 fw-bold text-warning">404</h1>
+                    <h2 class="h3 mb-3 text-dark" th:text="#{msg.error.notFound.header}">Página no encontrada</h2>
+                    <p class="text-muted mb-4" th:text="#{msg.error.notFound.message}">Mensaje de error...</p>
+                    <hr class="my-4">
+                    <a th:href="@{/admin/dashboard}" class="btn btn-dark btn-lg px-5">
+                        <i class="bi bi-house-door me-2"></i>
+                        <span th:text="#{msg.error.back_to_dashboard}">Volver</span>
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<div th:replace="~{admin/fragments/layout :: scripts}"></div>
+</body>
+</html>

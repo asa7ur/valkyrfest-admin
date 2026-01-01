@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head th:replace="~{admin/fragments/layout :: head(title=#{msg.admin.campings.list.title})}"></head>
 
 <body>
@@ -52,6 +52,7 @@
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
                                 <a th:href="@{/admin/festival/campings/delete/{id}(id=${c.id})}"
+                                   sec:authorize="hasRole('ADMIN')"
                                    class="btn btn-sm btn-danger"
                                    th:title="#{msg.admin.delete}"
                                    th:onclick="|return confirm('#{msg.admin.campings.confirm_delete}')|">

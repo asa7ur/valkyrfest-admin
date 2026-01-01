@@ -7,7 +7,10 @@ import org.iesalixar.daw2.GarikAsatryan.valkyrfest_admin.handlers.CustomOAuth2Su
 import org.iesalixar.daw2.GarikAsatryan.valkyrfest_admin.services.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,6 +19,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -29,6 +33,17 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Define la jerarquía de roles: ROLE_ADMIN incluye a ROLE_MANAGER.
+     */
+    @Bean
+    public RoleHierarchy roleHierarchy() {
+        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+        String hierarchy = "ROLE_ADMIN > ROLE_MANAGER";
+        roleHierarchy.setHierarchy(hierarchy);
+        return roleHierarchy;
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -37,9 +52,14 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/", "/register/**", "/login", "/css/**", "/js/**", "/images/**", "/uploads", "/stripe/webhook").permitAll()
-                        .requestMatchers("/admin/users/**").hasRole("ADMIN")
-                        .requestMatchers("/admin/**").hasAnyRole("ADMIN", "MANAGER")
+                        // Gracias a la jerarquía, solo el ADMIN puede gestionar usuarios
+                        .requestMatchers("/admin/users/**", "/admin/festival/users/**").hasRole("ADMIN")
+                        // Los MANAGER (y ADMIN por jerarquía) acceden al resto de la administración
+                        .requestMatchers("/admin/**").hasRole("MANAGER")
                         .anyRequest().authenticated()
+                )
+                .exceptionHandling(exception -> exception
+                        .accessDeniedPage("/error/403")
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
