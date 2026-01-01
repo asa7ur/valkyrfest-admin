@@ -62,7 +62,7 @@
                         </td>
                     </tr>
                     <tr th:if="${tickets == null || #lists.isEmpty(tickets)}">
-                        <td colspan="5" class="text-center py-5 text-muted">
+                        <td colspan="6" class="text-center py-5 text-muted">
                             <i class="bi bi-info-circle d-block fs-2 mb-2"></i>
                             <p th:text="#{msg.admin.no_results}">No se encontraron tickets.</p>
                         </td>

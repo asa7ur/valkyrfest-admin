@@ -36,8 +36,9 @@ public class SecurityConfig {
                         .ignoringRequestMatchers("/stripe/webhook")
                 )
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/register/**", "/login", "/css/*js/**", "/images/**", "/uploads/**", "/stripe/webhook").permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/", "/register/**", "/login", "/css/**", "/js/**", "/images/**", "/uploads", "/stripe/webhook").permitAll()
+                        .requestMatchers("/admin/users/**").hasRole("ADMIN")
+                        .requestMatchers("/admin/**").hasAnyRole("ADMIN", "MANAGER")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
