@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.iesalixar.daw2.GarikAsatryan.valkyrfest_admin.entities.Artist;
 import org.iesalixar.daw2.GarikAsatryan.valkyrfest_admin.services.ArtistService;
+import org.iesalixar.daw2.GarikAsatryan.valkyrfest_admin.services.FileStorageService;
 import org.iesalixar.daw2.GarikAsatryan.valkyrfest_admin.utils.PaginationUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -24,6 +25,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ArtistAdminController {
     private final ArtistService artistService;
     private final MessageSource messageSource;
+    private final FileStorageService fileStorageService;
 
     /**
      * Lists all artists in the database
