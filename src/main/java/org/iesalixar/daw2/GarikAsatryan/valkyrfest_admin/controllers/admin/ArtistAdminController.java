@@ -80,6 +80,15 @@ public class ArtistAdminController {
 
         return "redirect:/admin/festival/artists";
     }
+    
+    @GetMapping("/delete-logo/{id}")
+    public String deleteLogo(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        artistService.deleteLogo(id);
+        redirectAttributes.addFlashAttribute("successMessage",
+                messageSource.getMessage("msg.admin.artist.logo.delete.success", null, LocaleContextHolder.getLocale()));
+        return "redirect:/admin/festival/artists/edit/" + id;
+    }
+
 
     @GetMapping("/delete-image/{artistId}/{imageId}")
     public String deleteImage(@PathVariable Long artistId, @PathVariable Long imageId, RedirectAttributes redirectAttributes) {
